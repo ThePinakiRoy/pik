@@ -1,0 +1,23 @@
+{
+  "name": "pik",
+  "version": "1.0.0",
+  "description": "This is a simple web-based voicebot built against [api.ai](https://api.ai) backend. It implements a static client app, as well as a simple web service for doing math.",
+  "main": "main.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "body-parser": "^1.18.2",
+    "child-process": "^1.0.2",
+    "cors": "^2.8.4",
+    "elements": "^0.6.0",
+    "express": "^4.16.2",
+    "https": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pinaki Roy",
+  "license": "ISC"
+}

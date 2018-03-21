@@ -1,0 +1,10 @@
+var elements = {};
+
+elements.response = {};
+elements.response.speech = "";
+elements.response.displayText = "";
+elements.response.data = {};
+elements.response.contextOut = [];
+elements.response.source = "apiaiwebhook";
+
+module.exports = elements;

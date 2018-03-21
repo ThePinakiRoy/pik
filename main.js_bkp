@@ -1,0 +1,112 @@
+var express = require('express');
+var app     = express();
+
+var elements = require('./elements');
+
+var bodyParser = require('body-parser');
+var cors = require('cors')
+
+
+
+// get an instance of router
+var router = express.Router();
+app.use('/', router);
+app.use(express.static(__dirname + "/"));
+app.configure(function(){
+    app.use(express.bodyParser());
+    app.use(app.router);
+  });
+
+
+
+// route middle-ware that will happen on every request
+router.use(function(req, res, next) {
+    // log each request to the console
+    console.log(req.method, req.url + " logging all requests");
+    // continue doing what we were doing and go to the route
+    next(); 
+});
+
+// home page route for port 5000, gets executed when entering localhost:5000
+// and redirects to index.html (correctly and as expected)
+router.get('/', function(req, res) { 
+  console.log("routing from route")
+  res.redirect('index.html');
+  
+});
+
+
+
+ // This gets executed when my url is: http://localhost:5000/test
+ // and redirects to index.html (the questions is why!? I thought
+ // all the requests to root route would be caught by the router instance
+
+app.get('*', function(req, res){
+  console.log('redirecting to index.html'); 
+  res.redirect('/index.html');          
+ });
+
+ app.post("/yourpath", function(request, response) {
+       console.log(request.body); //This prints the JSON document received (if it is a JSON document)
+     });
+
+app.post('/webhook', function (req, res) {
+    console.log("received something")
+    try {
+        var speech = 'empty speech';
+        console.log(res.result)
+    console.log(req.request)
+
+        if (req.request) {
+            var requestBody = req.body;
+
+            if (requestBody.result) {
+                speech = '';
+
+                if (requestBody.result.fulfillment) {
+                    speech += requestBody.result.fulfillment.speech;
+                    speech += ' ';
+                }
+
+                if (requestBody.result.action) {
+                    speech += 'action: ' + requestBody.result.action + ' ';
+					console.log(requestBody.result.action)
+                }
+
+                var parameters = requestBody.result.parameters;
+                if (parameters){
+                    for (var p in parameters){
+                        if(parameters.hasOwnProperty(p) ) {
+                            speech += p + ": " + parameters[p] + "; ";
+                        }
+                    }
+                }
+            }
+        }
+
+        console.log('result: ', speech);
+
+        var response = elements.response;
+        response.speech = speech;
+        response.displayText = speech;        
+
+        return res.json(response);
+    } catch (err) {
+        console.error("Can't process request", err);
+
+        return res.status(400).json({
+            status: {
+                code: 400,
+                errorType: err.message
+            }
+        });
+    }
+});
+
+app.listen((process.env.PORT || 5000), function () {
+    console.log("Server listening port 5000");
+}); 
+ 
+ 
+ 
+ 
